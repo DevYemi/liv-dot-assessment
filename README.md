@@ -162,10 +162,47 @@ All UI related code are kept here. Subdivided to keep scale manageable:
 
 - **`Routes Dir`** — TanStack Router route files. Each file in this directory maps to a URL segment. `__root.tsx` wraps every route with the app shell (Header + Footer). `index.tsx` maps to `/`. **Do not put rendering logic here** — routes import from `pages/` and delegate rendering immediately.
 
-### Path aliases
+---
 
-One alias is configured in `tsconfig.json` and `vite.config.ts`, both pointing to `src/`:
+## State Management
+
+This project deliberately avoids a general-purpose global client state library (e.g. Redux, Zustand). State is divided into two distinct categories, each handled differently:
+
+### Server State — TanStack Query as the state manager
+
+All data that originates from the backend (or, in this project, the simulated async services in `src/data/services/`) is **server state**. TanStack Query owns this category entirely.
+
+The key insight behind TanStack Query is that server state is fundamentally different from local UI state: it lives remotely, can become stale, and is shared across multiple components at the same time. TanStack Query treats its internal cache as the single source of truth for that data — making it behave like a state manager purpose-built for async, remote data.
+
+**How the cache acts as a state store**
+
+Every query is identified by a **query key** (defined centrally in `eventQueryKeys`). When a query resolves, its result is written into the cache under that key. Any component that subscribes to the same key receives the cached value immediately — no prop drilling, no context wiring, no extra store setup.
 
 ```ts
-import { something } from '@/data/queries/eventQueries'
+// src/data/queries/eventQueries.ts
+export const eventQueryKeys = {
+  all: ['events'] as const,
+  event: (id: string) => ['events', id] as const,
+}
 ```
+
+**Mutations write back into the cache directly**
+
+After a mutation succeeds, the `onSuccess` callback calls `queryClient.setQueryData` to update the cache entry in-place. This means the UI reflects the new state instantly, without needing to fire a separate refetch round-trip:
+
+```ts
+onSuccess: (updatedEvent) => {
+  queryClient.setQueryData(eventQueryKeys.event(updatedEvent.id), updatedEvent)
+}
+```
+
+Every mutation in `eventQueries.ts` — scheduling an event, transitioning its state, updating the thumbnail or ticket price, toggling a pre-flight requirement — follows this same pattern. The cache entry for a given event ID is the shared, up-to-date representation of that event across the entire app.
+
+**Why this is enough**
+
+Because server state is the dominant form of state in this app (the event record drives almost everything rendered on screen), TanStack Query's cache effectively replaces what would otherwise require a separate client store. Local UI state (open/closed dialogs, optimistic input values) is handled with plain `useState` co-located in the relevant ViewModel hook — no library needed for that either.
+
+| State category             | Managed by           | Where                              |
+| -------------------------- | -------------------- | ---------------------------------- |
+| Server / async data        | TanStack Query cache | `src/data/queries/`                |
+| Local / ephemeral UI state | React `useState`     | `use<PageName>.ts` ViewModel hooks |
