@@ -13,7 +13,7 @@ import {
 import HlsVideo from 'hls-video-element/react'
 import { InfoIcon } from 'lucide-react'
 
-// Public demo HLS stream (Big Buck Bunny via Mux)
+// Public demo HLS stream
 const DEMO_STREAM_URL =
   'https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg.m3u8'
 

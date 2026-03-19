@@ -6,7 +6,6 @@ import type {
 import { canTransition, delay } from '@/utils/eventChunks'
 import { EVENT_STORE } from '@/constants/dummyData'
 
-/** GET /events/:id */
 export async function getEventById(id: string): Promise<TEventSchema> {
   await delay(600)
   const event = EVENT_STORE[id]
@@ -14,7 +13,6 @@ export async function getEventById(id: string): Promise<TEventSchema> {
   return { ...event }
 }
 
-/** PATCH /events/:id/state — advances to the given lifecycle state */
 export async function updateEventState(
   id: string,
   state: TEventStateSchema,
@@ -36,7 +34,6 @@ export async function updateEventState(
   return { ...updated }
 }
 
-/** PATCH /events/:id/schedule — sets scheduledAt and advances to scheduled state */
 export async function scheduleEvent(
   id: string,
   scheduledAt: string,
@@ -58,7 +55,6 @@ export async function scheduleEvent(
   return { ...updated }
 }
 
-/** PATCH /events/:id/requirements/:key — sets a requirement's satisfied state */
 export async function updateRequirement(
   id: string,
   key: TRequirementKeySchema,
@@ -100,7 +96,6 @@ export async function updateRequirement(
   return { ...updated }
 }
 
-/** PATCH /events/:id/thumbnail */
 export async function updateEventThumbnail(
   id: string,
   thumbnailUrl: string | null,
@@ -124,7 +119,6 @@ export async function updateEventThumbnail(
   return { ...updated }
 }
 
-/** PATCH /events/:id/ticket-price */
 export async function updateEventTicketPrice(
   id: string,
   ticketPrice: number | null,

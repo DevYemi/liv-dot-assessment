@@ -6,13 +6,11 @@ import { EVENT_STORE, EVENT_ID, SEED_EVENT } from '@/constants/dummyData'
 import type { TEventSchema } from '@/data/schemas/event'
 import { renderWithProviders } from '@/test/utils'
 
-// Make all service delays instant so tests don't have to wait for timers
 vi.mock('@/utils/eventChunks', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/utils/eventChunks')>()
   return { ...actual, delay: () => Promise.resolve() }
 })
 
-// StreamPreviewPlayer uses web-component libraries that don't run in jsdom
 vi.mock(
   '@/views/pages/EventDashboard/local-components/StreamPreviewPlayer',
   () => ({
@@ -24,8 +22,7 @@ vi.mock(
   }),
 )
 
-/** Deep-clone the seed event into the in-memory store. */
-function resetStore(overrides: Partial<TEventSchema> = {}) {
+const resetStore = (overrides: Partial<TEventSchema> = {}) => {
   EVENT_STORE[EVENT_ID] = {
     ...SEED_EVENT,
     ...overrides,
@@ -35,15 +32,11 @@ function resetStore(overrides: Partial<TEventSchema> = {}) {
   }
 }
 
-/** All 4 requirements satisfied. */
 const ALL_REQUIREMENTS_MET = SEED_EVENT.requirements.map((r) => ({
   ...r,
   satisfied: true,
 }))
 
-/**
- * Reset the in-memory store before every test
- */
 beforeEach(() => {
   resetStore()
 })
@@ -56,7 +49,6 @@ describe('Event Dashboard', () => {
     })
 
     it('shows an error message when the event cannot be found', async () => {
-      // Remove the event from the store to simulate a 404
       delete EVENT_STORE['evt-001']
       renderWithProviders(<EventDashboard />)
       await screen.findByText('Failed to load event. Please refresh.')
@@ -160,7 +152,7 @@ describe('Event Dashboard', () => {
     it('toggling Production Crew switch marks it as satisfied', async () => {
       const user = userEvent.setup()
       renderWithProviders(<EventDashboard />)
-      // Wait for data to load (labels appear in both panels)
+
       await screen.findAllByText('Production Crew')
 
       const [crewSwitch] = screen.getAllByRole('switch')
@@ -223,7 +215,6 @@ describe('Event Dashboard', () => {
     })
 
     it('auto-advances to readyForStreaming when the last requirement is met', async () => {
-      // Start with 3/4 satisfied — only crewAssigned still unmet
       resetStore({
         state: 'scheduled',
         scheduledAt: '2026-04-15T18:00:00.000Z',

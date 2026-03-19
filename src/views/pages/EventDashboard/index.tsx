@@ -10,7 +10,14 @@ import { RequirementToggle } from './local-components/RequirementToggle'
 import { StreamPreviewPlayer } from './local-components/StreamPreviewPlayer'
 
 export default function EventDashboard() {
-  const { eventData, eventIsLoading, eventIsError } = useEventDashboard()
+  const {
+    eventData,
+    eventIsLoading,
+    eventIsError,
+    isLive,
+    showPlayer,
+    showReadiness,
+  } = useEventDashboard()
 
   if (eventIsLoading) {
     return (
@@ -33,12 +40,6 @@ export default function EventDashboard() {
       </div>
     )
   }
-
-  const isLive = eventData.state === 'live'
-  const isReplayAvailable = eventData.state === 'replayAvailable'
-  const showPlayer = isLive || isReplayAvailable
-  const showReadiness =
-    eventData.state === 'scheduled' || eventData.state === 'readyForStreaming'
 
   return (
     <TooltipProvider>

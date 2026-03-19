@@ -12,5 +12,11 @@ export function useEventDashboard() {
     eventData,
     eventIsLoading,
     eventIsError,
+    isLive: eventData?.state === 'live',
+    showPlayer:
+      eventData?.state === 'live' || eventData?.state === 'replayAvailable',
+    showReadiness:
+      eventData?.state === 'scheduled' ||
+      eventData?.state === 'readyForStreaming',
   }
 }

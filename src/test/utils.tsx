@@ -1,8 +1,15 @@
 /** @format */
 
+import React from 'react'
 import { render } from '@testing-library/react'
-import { Providers } from '@/views/globalComponents/Providers'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const createTestQueryClient = () =>
+  new QueryClient({ defaultOptions: { queries: { retry: false } } })
 
 export const renderWithProviders = (children: React.ReactNode) => {
-  return render(<Providers>{children}</Providers>)
+  const queryClient = createTestQueryClient()
+  return render(
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>,
+  )
 }

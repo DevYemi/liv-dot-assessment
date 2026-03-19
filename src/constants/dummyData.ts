@@ -1,8 +1,5 @@
 import type { TEventSchema } from '@/data/schemas/event'
 
-// ---------------------------------------------------------------------------
-//  store (simulates a backend database)
-// ---------------------------------------------------------------------------
 const SEED_EVENT: TEventSchema = {
   id: 'evt-001',
   title: 'The Future of Independent Music — Live Summit',

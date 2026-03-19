@@ -40,9 +40,6 @@ export function allRequirementsSatisfied(event: TEventSchema): boolean {
   return event.requirements.every((r) => r.satisfied)
 }
 
-// ---------------------------------------------------------------------------
-// Async service functions — simulate network I/O with artificial latency
-// ---------------------------------------------------------------------------
 export function delay(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms))
 }
