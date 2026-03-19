@@ -2,6 +2,8 @@
 
 A full-stack event management dashboard built with TanStack Start. The app allows operators to view, manage, and monitor live events through a lifecycle-aware interface — covering everything from pre-event readiness checks to live stream previews and post-event state transitions.
 
+> Project is live at [https://liv-dot-assessment.vercel.app](https://liv-dot-assessment.vercel.app)
+
 ## Tech Stack
 
 | Category      | Technology                                                                      |
