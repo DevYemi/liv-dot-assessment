@@ -2,8 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type {
   TEventStateSchema,
   TRequirementKeySchema,
-} from '#/data/schemas/event'
-import { eventService } from '#/data/services/eventService'
+} from '@/data/schemas/event'
+import { eventService } from '@/data/services/eventService'
 
 export const eventQueryKeys = {
   all: ['events'] as const,
@@ -51,10 +51,18 @@ export function useUpdateThumbnailMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, thumbnailUrl }: { id: string; thumbnailUrl: string | null }) =>
-      eventService.updateEventThumbnail(id, thumbnailUrl),
+    mutationFn: ({
+      id,
+      thumbnailUrl,
+    }: {
+      id: string
+      thumbnailUrl: string | null
+    }) => eventService.updateEventThumbnail(id, thumbnailUrl),
     onSuccess: (updatedEvent) => {
-      queryClient.setQueryData(eventQueryKeys.event(updatedEvent.id), updatedEvent)
+      queryClient.setQueryData(
+        eventQueryKeys.event(updatedEvent.id),
+        updatedEvent,
+      )
     },
   })
 }
@@ -63,10 +71,18 @@ export function useUpdateTicketPriceMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, ticketPrice }: { id: string; ticketPrice: number | null }) =>
-      eventService.updateEventTicketPrice(id, ticketPrice),
+    mutationFn: ({
+      id,
+      ticketPrice,
+    }: {
+      id: string
+      ticketPrice: number | null
+    }) => eventService.updateEventTicketPrice(id, ticketPrice),
     onSuccess: (updatedEvent) => {
-      queryClient.setQueryData(eventQueryKeys.event(updatedEvent.id), updatedEvent)
+      queryClient.setQueryData(
+        eventQueryKeys.event(updatedEvent.id),
+        updatedEvent,
+      )
     },
   })
 }

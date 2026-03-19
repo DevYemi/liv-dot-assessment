@@ -1,4 +1,4 @@
-import type { TEventSchema } from '#/data/schemas/event'
+import type { TEventSchema } from '@/data/schemas/event'
 
 // ---------------------------------------------------------------------------
 //  store (simulates a backend database)

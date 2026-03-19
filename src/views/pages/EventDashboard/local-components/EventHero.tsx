@@ -1,8 +1,8 @@
 import { Calendar, DollarSign, ImageIcon } from 'lucide-react'
 import { Card, CardContent } from '@/views/globalComponents/shadcn-ui/card'
 import type { TEventSchema, TEventStateSchema } from '@/data/schemas/event'
-import { cn } from '#/utils/shadcn'
-import { formatDate } from '#/utils/eventChunks'
+import { cn } from '@/utils/shadcn'
+import { formatDate } from '@/utils/eventChunks'
 
 const STATE_CONFIG: Record<
   TEventStateSchema,

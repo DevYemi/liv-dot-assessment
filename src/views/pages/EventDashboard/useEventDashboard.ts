@@ -1,5 +1,5 @@
 import { useGetEventByIdQuery } from '@/data/queries/eventQueries'
-import { EVENT_ID } from '#/constants/dummyData'
+import { EVENT_ID } from '@/constants/dummyData'
 
 export function useEventDashboard() {
   const {
