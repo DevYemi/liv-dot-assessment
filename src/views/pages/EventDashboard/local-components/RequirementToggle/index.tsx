@@ -28,18 +28,15 @@ export function RequirementToggle() {
     <Collapsible open>
       <CollapsibleTrigger className="flex w-full items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/40 px-4 py-2.5 text-left text-xs font-medium text-zinc-500 transition-colors hover:border-zinc-700 hover:text-zinc-400">
         <Settings2 className="h-3.5 w-3.5" />
-        <span>Event Controls — Requirements Needed Before Go Live</span>
+        <span>Event Controls — Operational Readiness</span>
       </CollapsibleTrigger>
       <CollapsibleContent>
         {isControlsLocked && (
           <div className="mb-1 mt-1 flex items-center gap-2 rounded-lg border border-amber-800/50 bg-amber-950/40 px-3 py-2 text-xs text-amber-400">
             <Lock className="h-3.5 w-3.5 shrink-0" />
             <span>
-              Event controls are locked while the event is{' '}
-              <span className="font-semibold capitalize">
-                {eventData.state}
-              </span>
-              .
+              Operational Readiness controls are locked after the event has gone
+              live.
             </span>
           </div>
         )}

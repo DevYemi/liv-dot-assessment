@@ -8,11 +8,13 @@ import {
 import { Progress } from '@/views/globalComponents/shadcn-ui/progress'
 import type { TRequirementSchema } from '@/data/schemas/event'
 
-interface ReadinessPanelProps {
+interface OperationalReadinessPanelProps {
   requirements: TRequirementSchema[]
 }
 
-export function ReadinessPanel({ requirements }: ReadinessPanelProps) {
+export function OperationalReadinessPanel({
+  requirements,
+}: OperationalReadinessPanelProps) {
   const satisfied = requirements.filter((r) => r.satisfied).length
   const total = requirements.length
   const percent = Math.round((satisfied / total) * 100)

@@ -4,16 +4,17 @@ import { TooltipProvider } from '@/views/globalComponents/shadcn-ui/tooltip'
 import { useEventDashboard } from './useEventDashboard'
 import { EventHero } from './local-components/EventHero'
 import { LifecycleTimeline } from './local-components/LifecycleTimeline'
-import { ReadinessPanel } from './local-components/ReadinessPanel'
+import { OperationalReadinessPanel } from './local-components/OperationalReadinessPanel'
 import { ActionBar } from './local-components/ActionBar'
 import { RequirementToggle } from './local-components/RequirementToggle'
+import { StreamPreviewPlayer } from './local-components/StreamPreviewPlayer'
 
 export default function EventDashboard() {
   const { eventData, eventIsLoading, eventIsError } = useEventDashboard()
 
   if (eventIsLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex min-h-[90vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-zinc-500">
           <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
           <span className="text-sm">Loading event…</span>
@@ -34,6 +35,8 @@ export default function EventDashboard() {
   }
 
   const isLive = eventData.state === 'live'
+  const isReplayAvailable = eventData.state === 'replayAvailable'
+  const showPlayer = isLive || isReplayAvailable
   const showReadiness =
     eventData.state === 'scheduled' || eventData.state === 'readyForStreaming'
 
@@ -48,12 +51,18 @@ export default function EventDashboard() {
               </span>
             </div>
             <h2 className="mb-6 text-xs font-semibold tracking-widest text-zinc-500 uppercase">
-              Event Lifecycle
+              Event Status
             </h2>
             <LifecycleTimeline currentState={eventData.state} />
           </div>
 
           <Separator className="mb-8 bg-zinc-800" />
+
+          {showPlayer && (
+            <div className="mb-6">
+              <StreamPreviewPlayer isLive={isLive} />
+            </div>
+          )}
 
           {isLive && (
             <div className="mb-6">
@@ -80,7 +89,9 @@ export default function EventDashboard() {
 
             {showReadiness && (
               <div className="lg:col-span-2">
-                <ReadinessPanel requirements={eventData.requirements} />
+                <OperationalReadinessPanel
+                  requirements={eventData.requirements}
+                />
               </div>
             )}
           </div>

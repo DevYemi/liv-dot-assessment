@@ -12,14 +12,14 @@ const SEED_EVENT: TEventSchema = {
   state: 'draft',
   thumbnailUrl: null,
   viewerCount: 0,
-  ticketPrice: 12.99,
+  ticketPrice: null,
   requirements: [
     {
       key: 'crewAssigned',
       label: 'Production Crew',
       description:
         'A production crew must be assigned to handle the broadcast.',
-      satisfied: true,
+      satisfied: false,
     },
     {
       key: 'ingestConfigured',
@@ -31,7 +31,7 @@ const SEED_EVENT: TEventSchema = {
       key: 'pricingConfigured',
       label: 'Ticket Pricing',
       description: 'Ticket price must be set before the event can go live.',
-      satisfied: true,
+      satisfied: false,
     },
     {
       key: 'thumbnailUploaded',
