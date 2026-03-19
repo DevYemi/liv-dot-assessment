@@ -73,6 +73,7 @@ export function ActionBar() {
     isTransitioning,
     updateEventStateHandler,
   } = useActionBar()
+  console.log('eventData.state', eventData.state)
   const config = ACTION_CONFIG[eventData.state]
   const isBlocked = !canAdvance && !config.terminal
 

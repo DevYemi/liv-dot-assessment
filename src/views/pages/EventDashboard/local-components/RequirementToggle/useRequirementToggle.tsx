@@ -74,6 +74,10 @@ export function useRequirementToggle() {
     isUpdatingTicketPrice,
     fileInputRef,
     priceInputValue,
+    isControlsLocked:
+      eventData?.state === 'live' ||
+      eventData?.state === 'completed' ||
+      eventData?.state === 'replayAvailable',
     setPriceInputValue,
     updateRequirementHandler,
     updateThumbnailHandler,

@@ -1,4 +1,4 @@
-import { Settings2, ImageIcon, X } from 'lucide-react'
+import { Settings2, ImageIcon, X, Lock } from 'lucide-react'
 import { Switch } from '@/views/globalComponents/shadcn-ui/switch'
 import { Input } from '@/views/globalComponents/shadcn-ui/input'
 import { Button } from '@/views/globalComponents/shadcn-ui/button'
@@ -17,6 +17,7 @@ export function RequirementToggle() {
     fileInputRef,
     priceInputValue,
     isUpdatingTicketPrice,
+    isControlsLocked,
     setPriceInputValue,
     updateRequirementHandler,
     updateThumbnailHandler,
@@ -27,9 +28,21 @@ export function RequirementToggle() {
     <Collapsible open>
       <CollapsibleTrigger className="flex w-full items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/40 px-4 py-2.5 text-left text-xs font-medium text-zinc-500 transition-colors hover:border-zinc-700 hover:text-zinc-400">
         <Settings2 className="h-3.5 w-3.5" />
-        <span>Dev Controls — Simulate Requirements</span>
+        <span>Event Controls — Requirements Needed Before Go Live</span>
       </CollapsibleTrigger>
       <CollapsibleContent>
+        {isControlsLocked && (
+          <div className="mb-1 mt-1 flex items-center gap-2 rounded-lg border border-amber-800/50 bg-amber-950/40 px-3 py-2 text-xs text-amber-400">
+            <Lock className="h-3.5 w-3.5 shrink-0" />
+            <span>
+              Event controls are locked while the event is{' '}
+              <span className="font-semibold capitalize">
+                {eventData.state}
+              </span>
+              .
+            </span>
+          </div>
+        )}
         <div className="mt-1 space-y-1 rounded-lg border border-zinc-800 bg-zinc-900/40 p-3">
           {eventData.requirements.map((req) => (
             <div
@@ -58,13 +71,13 @@ export function RequirementToggle() {
                     accept="image/*"
                     className="hidden"
                     onChange={updateThumbnailHandler}
-                    disabled={isUpdatingThumbnail}
+                    disabled={isControlsLocked || isUpdatingThumbnail}
                   />
                   <Button
                     size="sm"
                     variant="outline"
                     className="h-7 border-zinc-700 bg-zinc-800 px-2 text-xs text-zinc-300 hover:bg-zinc-700"
-                    disabled={isUpdatingThumbnail}
+                    disabled={isControlsLocked || isUpdatingThumbnail}
                     onClick={() => fileInputRef.current?.click()}
                   >
                     {eventData.thumbnailUrl ? 'Replace' : 'Upload'}
@@ -72,7 +85,7 @@ export function RequirementToggle() {
                   {eventData.thumbnailUrl && (
                     <button
                       className="text-zinc-600 hover:text-zinc-400 disabled:opacity-50"
-                      disabled={isUpdatingThumbnail}
+                      disabled={isControlsLocked || isUpdatingThumbnail}
                       onClick={() => updateThumbnailHandler(null)}
                     >
                       <X className="h-3.5 w-3.5" />
@@ -92,9 +105,11 @@ export function RequirementToggle() {
                       value={priceInputValue}
                       onChange={(e) => setPriceInputValue(e.target.value)}
                       onKeyDown={(e) =>
-                        e.key === 'Enter' && updateTicketPriceHandler()
+                        !isControlsLocked &&
+                        e.key === 'Enter' &&
+                        updateTicketPriceHandler()
                       }
-                      disabled={isUpdatingTicketPrice}
+                      disabled={isControlsLocked || isUpdatingTicketPrice}
                       className="h-7 border-zinc-700 bg-zinc-800 pl-5 text-xs text-zinc-300 focus-visible:ring-violet-600"
                       placeholder="0.00"
                     />
@@ -103,7 +118,7 @@ export function RequirementToggle() {
                     size="sm"
                     variant="outline"
                     className="h-7 border-zinc-700 bg-zinc-800 px-2 text-xs text-zinc-300 hover:bg-zinc-700"
-                    disabled={isUpdatingTicketPrice}
+                    disabled={isControlsLocked || isUpdatingTicketPrice}
                     onClick={updateTicketPriceHandler}
                   >
                     Set
@@ -112,7 +127,7 @@ export function RequirementToggle() {
               ) : (
                 <Switch
                   checked={req.satisfied}
-                  disabled={isTogglingRequirement}
+                  disabled={isControlsLocked || isTogglingRequirement}
                   onCheckedChange={() => updateRequirementHandler(req.key)}
                   className="scale-75 data-checked:bg-violet-600"
                 />

@@ -83,15 +83,21 @@ export async function updateEventThumbnail(
   id: string,
   thumbnailUrl: string | null,
 ): Promise<TEventSchema> {
-  await delay(300)
+  await delay(600)
   const event = EVENT_STORE[id]
   if (!event) throw new Error(`Event "${id}" not found`)
 
   const updatedRequirements = event.requirements.map((r) =>
-    r.key === 'thumbnailUploaded' ? { ...r, satisfied: thumbnailUrl !== null } : r,
+    r.key === 'thumbnailUploaded'
+      ? { ...r, satisfied: thumbnailUrl !== null }
+      : r,
   )
 
-  const updated: TEventSchema = { ...event, thumbnailUrl, requirements: updatedRequirements }
+  const updated: TEventSchema = {
+    ...event,
+    thumbnailUrl,
+    requirements: updatedRequirements,
+  }
   EVENT_STORE[id] = updated
   return { ...updated }
 }
@@ -101,15 +107,21 @@ export async function updateEventTicketPrice(
   id: string,
   ticketPrice: number | null,
 ): Promise<TEventSchema> {
-  await delay(300)
+  await delay(600)
   const event = EVENT_STORE[id]
   if (!event) throw new Error(`Event "${id}" not found`)
 
   const updatedRequirements = event.requirements.map((r) =>
-    r.key === 'pricingConfigured' ? { ...r, satisfied: ticketPrice !== null } : r,
+    r.key === 'pricingConfigured'
+      ? { ...r, satisfied: ticketPrice !== null }
+      : r,
   )
 
-  const updated: TEventSchema = { ...event, ticketPrice, requirements: updatedRequirements }
+  const updated: TEventSchema = {
+    ...event,
+    ticketPrice,
+    requirements: updatedRequirements,
+  }
   EVENT_STORE[id] = updated
   return { ...updated }
 }
