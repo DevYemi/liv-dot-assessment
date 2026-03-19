@@ -13,14 +13,7 @@ import {
   AlertDescription,
 } from '@/views/globalComponents/shadcn-ui/alert'
 import type { TEventStateSchema } from '@/data/schemas/event'
-
-interface ActionBarProps {
-  state: TEventStateSchema
-  canTransition: boolean
-  transitionReason?: string
-  isPending: boolean
-  onTransition: () => void
-}
+import { useActionBar } from './useActionBar'
 
 const ACTION_CONFIG: Record<
   TEventStateSchema,
@@ -71,16 +64,17 @@ const ACTION_CONFIG: Record<
   },
 }
 
-export function ActionBar({
-  state,
-  canTransition,
-  transitionReason,
-  isPending,
-  onTransition,
-}: ActionBarProps) {
-  const config = ACTION_CONFIG[state]
-  const isBlocked = !canTransition && !config.terminal
-  const isGoLive = state === 'readyForStreaming'
+export function ActionBar() {
+  const {
+    eventData,
+    canAdvance,
+    isGoLive,
+    transitionReason,
+    isTransitioning,
+    updateEventStateHandler,
+  } = useActionBar()
+  const config = ACTION_CONFIG[eventData.state]
+  const isBlocked = !canAdvance && !config.terminal
 
   return (
     <div className="space-y-3">
@@ -96,10 +90,10 @@ export function ActionBar({
         <Button
           variant={config.variant}
           size="lg"
-          disabled={isBlocked || config.terminal || isPending}
-          onClick={onTransition}
+          disabled={isBlocked || config.terminal || isTransitioning}
+          onClick={updateEventStateHandler}
           className={
-            isGoLive && canTransition
+            isGoLive && canAdvance
               ? 'bg-violet-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:bg-violet-500 hover:shadow-[0_0_28px_rgba(139,92,246,0.5)]'
               : ''
           }
