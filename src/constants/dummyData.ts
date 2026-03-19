@@ -47,4 +47,4 @@ const EVENT_STORE: Record<string, TEventSchema | undefined> = {
   [SEED_EVENT.id]: { ...SEED_EVENT },
 }
 const EVENT_ID = 'evt-001'
-export { EVENT_STORE, EVENT_ID }
+export { EVENT_STORE, EVENT_ID, SEED_EVENT }
