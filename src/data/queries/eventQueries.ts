@@ -17,6 +17,21 @@ export function useGetEventByIdQuery(id: string) {
   })
 }
 
+export function useScheduleEventMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, scheduledAt }: { id: string; scheduledAt: string }) =>
+      eventService.scheduleEvent(id, scheduledAt),
+    onSuccess: (updatedEvent) => {
+      queryClient.setQueryData(
+        eventQueryKeys.event(updatedEvent.id),
+        updatedEvent,
+      )
+    },
+  })
+}
+
 export function useUpdateEventStateMutation() {
   const queryClient = useQueryClient()
 

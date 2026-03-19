@@ -36,6 +36,28 @@ export async function updateEventState(
   return { ...updated }
 }
 
+/** PATCH /events/:id/schedule — sets scheduledAt and advances to scheduled state */
+export async function scheduleEvent(
+  id: string,
+  scheduledAt: string,
+): Promise<TEventSchema> {
+  await delay(500)
+  const event = EVENT_STORE[id]
+  if (!event) throw new Error(`Event "${id}" not found`)
+
+  const check = canTransition(event)
+  if (!check.allowed) throw new Error(check.reason)
+
+  const updated: TEventSchema = {
+    ...event,
+    state: 'scheduled',
+    scheduledAt,
+  }
+
+  EVENT_STORE[id] = updated
+  return { ...updated }
+}
+
 /** PATCH /events/:id/requirements/:key — sets a requirement's satisfied state */
 export async function updateRequirement(
   id: string,
@@ -128,6 +150,7 @@ export async function updateEventTicketPrice(
 
 export const eventService = {
   getEventById,
+  scheduleEvent,
   updateEventState,
   updateRequirement,
   updateEventThumbnail,

@@ -8,8 +8,8 @@ const SEED_EVENT: TEventSchema = {
   title: 'The Future of Independent Music — Live Summit',
   description:
     'A live panel and performance event featuring independent artists, producers, and industry voices exploring what the next decade holds for music creation, distribution, and fan connection.',
-  scheduledAt: '2026-04-15T19:00:00Z',
-  state: 'scheduled',
+  scheduledAt: null,
+  state: 'draft',
   thumbnailUrl: null,
   viewerCount: 0,
   ticketPrice: 12.99,

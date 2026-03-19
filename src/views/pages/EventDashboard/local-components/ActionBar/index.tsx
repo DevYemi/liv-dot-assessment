@@ -12,6 +12,12 @@ import {
   Alert,
   AlertDescription,
 } from '@/views/globalComponents/shadcn-ui/alert'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/views/globalComponents/shadcn-ui/popover'
+import { Calendar } from '@/views/globalComponents/shadcn-ui/calendar'
 import type { TEventStateSchema } from '@/data/schemas/event'
 import { useActionBar } from './useActionBar'
 
@@ -72,10 +78,35 @@ export function ActionBar() {
     transitionReason,
     isTransitioning,
     updateEventStateHandler,
+    isPickerOpen,
+    setIsPickerOpen,
+    selectedDate,
+    setSelectedDate,
+    openPicker,
+    closePicker,
+    confirmSchedule,
   } = useActionBar()
-  console.log('eventData.state', eventData.state)
+
   const config = ACTION_CONFIG[eventData.state]
   const isBlocked = !canAdvance && !config.terminal
+  const isDraft = eventData.state === 'draft'
+
+  const actionButton = (
+    <Button
+      variant={config.variant}
+      size="lg"
+      disabled={isBlocked || config.terminal || isTransitioning}
+      onClick={isDraft ? openPicker : updateEventStateHandler}
+      className={
+        isGoLive && canAdvance
+          ? 'bg-violet-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:bg-violet-500 hover:shadow-[0_0_28px_rgba(139,92,246,0.5)]'
+          : ''
+      }
+    >
+      {config.icon}
+      {config.label}
+    </Button>
+  )
 
   return (
     <div className="space-y-3">
@@ -88,20 +119,33 @@ export function ActionBar() {
         </Alert>
       )}
       <div className="flex items-center gap-4">
-        <Button
-          variant={config.variant}
-          size="lg"
-          disabled={isBlocked || config.terminal || isTransitioning}
-          onClick={updateEventStateHandler}
-          className={
-            isGoLive && canAdvance
-              ? 'bg-violet-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:bg-violet-500 hover:shadow-[0_0_28px_rgba(139,92,246,0.5)]'
-              : ''
-          }
-        >
-          {config.icon}
-          {config.label}
-        </Button>
+        {isDraft ? (
+          <Popover open={isPickerOpen} onOpenChange={setIsPickerOpen}>
+            <PopoverTrigger render={actionButton} />
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                disabled={{ before: new Date() }}
+              />
+              <div className="flex justify-end gap-2 border-t border-border p-3">
+                <Button variant="outline" size="sm" onClick={closePicker}>
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  disabled={!selectedDate || isTransitioning}
+                  onClick={confirmSchedule}
+                >
+                  Confirm Schedule
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        ) : (
+          actionButton
+        )}
         <p className="text-sm text-zinc-600">{config.description}</p>
       </div>
     </div>
